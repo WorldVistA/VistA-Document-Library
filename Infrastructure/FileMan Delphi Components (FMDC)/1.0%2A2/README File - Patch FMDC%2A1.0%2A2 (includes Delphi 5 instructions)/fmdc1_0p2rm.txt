@@ -1,0 +1,281 @@
+Readme File
+Last Updated: 10/11/01
+
+=========================================
+Package: FileMan Delphi Components (FMDC)
+Current Version: 1.0
+Original Release Date: June 1998
+Dept. of Veterans Affairs
+VHA OI System Design & Development (SD&D)
+=========================================
+
+This file contains any last minute changes, new instructions 
+(not found in the documentation), and additional information to
+supplement the manuals.
+
+This version of the FMDC Readme has been reformatted, updated,
+and reordered.
+
+NOTE: References to Delphi V. 3. have been removed. However,
+      the latest FMDC installation program (i.e., FMDC1_0P1.EXE)
+      still installs FMDC components that work with Delphi V. 3.
+
+
+TABLE OF CONTENTS
+=================
+
+ 1. Signs that You Need to (Re)compile FMDC
+
+ 2. (Re)compiling the FMDC (Delphi Versions 4 and 5)
+  
+ 3. Recompiling when You Update Your BDK
+ 
+ 4. Run the Installation Program (i.e., FMDC*1.0P1.EXE)
+    (added 10/11/01)
+ 
+ 5. Updating the FMDC for Delphi Versions 4 and 5
+    (updated 10/11/01)
+ 
+ 6. Manual (Re)compilation and FMDC Installation Procedure
+ 
+ 7. Updating the FMDC Library Path for a New Delphi Version
+
+ 8. Installing the FMDC Help in Delphi Version 5
+
+
+
+------------------------------------------------------------------
+1. Signs that You Need to (Re)compile FMDC
+------------------------------------------------------------------
+
+When you install an updated version of one of the referenced BDK 
+or Delphi components in Delphi's Component Palette, Delphi may present
+error messages indicating one of several potential problems. These
+messages may indicate that the FMDC package needs to be (re)compiled with
+the latest version of the component(s) that have been updated.
+
+
+------------------------------------------------------------------
+2. (Re)compiling the FMDC (Delphi Versions 4 and 5)
+------------------------------------------------------------------
+
+Patch FMDC*1.0*1 provides the source code for the FileMan Delphi 
+Components (FMDC). You need to use the source code in order to
+compile or recompile FMDC in the following situations:
+
+ A. When you upgrade your Broker Development Kit (BDK)
+ 
+ B. When you upgrade your Delphi VCL source code or
+    your Delphi version (e.g., to Delphi V. 5).
+
+(Re)compilation (see #6 below) is necessary in these situations 
+because the FMDC source code has references/dependencies on both the
+BDK's TRPCBroker component and also on certain components distributed
+in Delphi.
+
+
+------------------------------------------------------------------
+3. Recompiling when You Update Your BDK
+------------------------------------------------------------------
+
+When you update your BDK, in most cases with Delphi V. 4 and Delphi V. 5,
+Delphi should recompile FMDC automatically - if it can find the source
+code (see #4 below) - when a change in the BDK component is encountered.
+If automatic recompilation does not occur, you can manually recompile
+(see #6 below).
+
+
+------------------------------------------------------------------
+4. Run the Installation Program (i.e., FMDC*1_0P1.EXE)
+   (added 10/11/01)
+------------------------------------------------------------------
+
+
+If this is a virgin installation of the FMDC, do the following:
+
+ A. Follow Steps #1-2 under the "Delphi V. 4 Instructions" topic in
+    the "FileMan Delphi Components V. 1.0*1 Installation Guide" to
+    install the FMDC.
+
+ B. Proceed to #5 below.
+
+Otherwise, proceed to #5 below.
+
+
+------------------------------------------------------------------
+5. Updating the FMDC for Delphi Versions 4 and 5
+   (updated 10/10/01)
+------------------------------------------------------------------
+
+When moving to version 5 of Delphi, do the following:
+
+ A. Create a D5 directory under VISTA\Fmdc: 
+
+         C:\Program Files\VISTA\Fmdc\D5
+
+ B. Copy the current FMDC source code and related files from:
+
+         C:\Program Files\VISTA\Fmdc\D4   < existing directory >
+
+    TO:
+         
+         C:\Program Files\VISTA\Fmdc\D5   < new directory, see #5A >
+
+    Thus, the compiled modules for Delphi V. 5 will not overwrite the
+    compiled modules for Delphi V. 4.
+ 
+ C. Delete the Trpcb.dcu file, if it exists, from
+    both the ...\Fmdc\D4 and D5 directories.
+
+ D. Use a text editor (e.g., Microsoft's Notepad) to open up the Fmdc.dpk.
+    In the "requires" section, do the following:
+
+    For Delph V. 4, change "VistaBroker" to "XWB_D40". The requires section should
+    now look like:
+
+            requires
+              vcl40,
+              XWB_D40;
+
+    For Delphi V. 5, change "vcl40" to "vcl50" and "VistaBroker" to "XWB_D50".
+    The requires section should now look like:
+ 
+            requires
+              vcl50,
+              XWB_D50;
+
+ E. When your edits are complete, save the file and close the text editor.
+ 
+ F. Compile the FMDC for Delphi V. 5 (See #6 below).
+
+
+------------------------------------------------------------------
+6. Manual (Re)compilation and FMDC Installation Procedure
+------------------------------------------------------------------
+
+ A. Open Delphi and close all projects.
+
+ B. Select File | Open. 
+
+ C. In the "Open" window, change the "Files of type" filter to 
+    "Delphi package (*.dpk)"
+
+ D. Navigate to the appropriate directory in which you've installed 
+    FMDC for the version of Delphi that you are using, and open
+    Fmdc.dpk.
+  
+    If you are using a newer version of Delphi you may get the following
+    messages:
+
+         * "This package appears to be in an older format.  Would you like 
+            to convert it to the new format?"  Click Yes.
+ 
+         * "Update Complete."  Click OK.
+
+ E. In the "Package - Fmdc.dpk" window, Press the Compile speed button.  You may
+    get the following message:
+   
+         * "Package 'fmdc' is about to be compiled. Continue?" Click Yes.
+
+    This (re)compiles FMDC with whatever version of the BDK is present on 
+    the library path (see #4 above).
+
+    NOTE: If you get a compiler error for Delphi V. 4 or 5, make sure that you
+          review/follow #5C - #5F above.
+
+ F. In the "Package - Fmdc.dpk" window, press the Install speed button.  If the
+    install succeeds, Delphi will tell you:
+
+         "Package ...\Fmdc.bpl has been installed. The following new 
+          component(s) have been registered: TFMCheckBox, TFMComboBox, 
+          TFMComboBoxLookUp, TFMEdit, TFMFiler, TFMFinder, TFMFindOne, 
+          TFMGets, TFMHelp, TFMLabel, TFMListBox, TFMLister, TFMLookUp,
+          TFMMemo, TFMRadioButton, TFMRadioGroup, TFMValidator."  Click OK.
+
+ G. Close the "Package - Fmdc.dpk" window and/or Delphi itself. Delphi will ask
+    you:
+
+         "Save changes to project FMDC?"  Click Yes.
+
+
+ If this does not work, it may be necessary to go one step lower and 
+ start from there (to rebuild the FMDC package file). To do this:
+
+ a. Open Delphi and close all projects.
+
+ b. Select Component | Install Component...
+
+ c. If not already selected, select the "Into existing package" tab.
+
+ d. For "Package file name", locate and select the desired Package file
+    (e.g. Fmdc.dpk) using the Browse button.
+
+ e. For "Unit file name", locate the FMDC desired directory and select
+    any of the Pascal FMDC source code files (e.g. Fmcmpnts.pas).  Click OK.
+
+    You may get the following message:
+
+         * "This package already contains a unit named ****.pas"  Click OK.
+
+    If you are using a newer version of Delphi you may get the following
+    messages:
+
+         * "This package appears to be in an older format.  Would you like 
+            to convert it to the new format?"  Click Yes. 
+ 
+         * "Update Complete."  Click OK.
+
+
+ f. Click on the Compile speed button to compile the Fmdc.dpk package.
+
+ g. Click on the Install speed button to install the Fmdc.dpk package into Delphi.
+
+    You may get the following messages:
+
+         * "Package 'fmdc' is about to be compiled.  Continue?"  Click Yes.
+   
+         * "Package ...\fmdc.bpl has been installed. The following new 
+            component(s) have been registered: TFMCheckBox, TFMComboBox, 
+            TFMComboBoxLookUp, TFMEdit, TFMFiler, TFMFinder, TFMFindOne, 
+            TFMGets, TFMHelp, TFMLabel, TFMListBox, TFMLister, TFMLookUp,
+            TFMMemo, TFMRadioButton, TFMRadioGroup, TFMValidator."   Click OK.
+
+ h. Close the "Package - Fmdc.dpk" window and/or Delphi itself. Delphi will ask
+    you:
+    
+         "Save changes to project FMDC?" Click Yes.
+
+ Note: These instructions also apply for any other Delphi components 
+       that may depend on RPC Broker code, as FMDC does.
+
+
+------------------------------------------------------------------
+7. Updating the FMDC Library Path for a New Delphi Version 
+------------------------------------------------------------------
+   
+Open up Delphi and make sure that the directory for the BDK, usually: 
+
+     C:\Program Files\VISTA\BDK32\D4 (or D5)
+
+and FMDC, usually:
+ 
+     C:\Program Files\VISTA\Fmdc\D4 (or D5) 
+
+are included in the Library Path under the Tools|Environment Options|Library
+tab in Delphi.  If after (re)compiling, problems are still encountered, ensure
+that none of the directories referenced in the Library Path prior to the 
+working directories for the BDK and FMDC contain old versions of the
+compiled packages.
+
+
+------------------------------------------------------------------
+8. Installing FMDC Help in Delphi V. 5
+------------------------------------------------------------------
+
+Follow Step #6 under the "Delphi V. 4 Instructions" topic in the
+"FileMan Delphi Components V. 1.0*1 Installation Guide" to install
+the FMDC Help (changing references from "Delphi 4" to "Delphi 5"
+and "D4" to "D5").
+
+
+
