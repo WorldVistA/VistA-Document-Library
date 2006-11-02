@@ -1,0 +1,127 @@
+Readme File
+Last Updated: 05/04/2006
+
+================================================================================
+Software: RPC Broker
+Current Version: 1.1
+Last BDK Release: Patch XWB*1.1*40; released on 01/20/05
+Original Software Release Date: October 1997
+
+Maintenance Project Manager: Jack Schram
+Developer: Joel Ivey
+Technical Writer: Thom Blom
+
+Dept. of Veterans Affairs
+VHA OI Health Systems Design & Development (HSD&D)
+================================================================================
+
+At this time, Health Systems Design & Development (HSD&D) is not supporting 
+RPC Broker-based client/server software development using Delphi 2005. Thus, 
+these standalone instructions were created for those programmers who
+are developing RPC Broker-based applications using Borland Delphi 2005.
+
+NOTE: In the following instructions, the developer used "90" to identify Delphi
+      2005. He started with RPC Broker files for Delphi 7
+      (i.e., D70 and R70).
+
+
+TABLE OF CONTENTS
+=================
+
+ * 05/04/06: Delphi 2005 Instructions
+
+
+--------------------------------------------------------------------------------
+05/04/06: Delphi 2005 Instructions for RPC Broker BDK
+--------------------------------------------------------------------------------
+
+The following describes the procedures to be used for Delphi 2005.
+
+For RPC Broker--It is recommended that you refer to RPC Broker Patch XWB*1.1*40.
+                This patch is a client-side only patch for the Broker 
+                Development Kit (BDK). The patch refers to the installation of 
+                xwb1_1p40pg.exe on the developer's client workstation. This 
+                patch is only required for those sites doing Delphi development
+                of RPC Broker-based applications.
+
+NOTE: If you install the xwb1_1p40pg.exe program on a workstation with Delphi 
+      V. 2005 already installed, the RPC Broker executable will not find a 
+      Delphi version that it recognizes, but it will still install all of the
+      RPC Broker-related files under the C:\Program Files\vista\BDK32 directory
+      (default), or other user-specified directory indicated during the 
+      installation process. After the installation, follow the instructions as
+      indicated below.
+
+  1. Open the BDK32\Source directory.
+
+  2. Identify all the package (.dpk) files that had D70 or R70 in their names. 
+     The following list is sorted by extension. If .dsk files exist, ignore 
+     them. 
+
+         XWB_D70.dcr
+         SharedRPCBroker_D70.dpk
+         SharedRPCBroker_R70.dpk
+         XWB_D70.dpk
+         XWB_R70.dpk
+         VERGENCECONTEXTORLib_TLB_D70.pas
+   
+  3. Copy these files to the same directory so that they are now "Copy Of ..."
+
+  4. Edit the "copy of ..." filenames to delete the "Copy of " and change 
+     70 to 90, as shown below:
+
+         XWB_D90.dcr
+         SharedRPCBroker_D90.dpk
+         SharedRPCBroker_R90.dpk
+         XWB_D90.dpk
+         XWB_R90.dpk
+         VERGENCECONTEXTORLib_TLB_D90.pas
+         SharedRPCBroker_D90.res
+         SharedRPCBroker_R90.res
+         XWB_D90.res
+         XWB_R90.res
+   
+  5. For consistency, Open each file and change the 70 portion of the filename
+     inside to 90, and any other instances of 70 to 90 as well.
+
+  6. Open Delphi 2005 and select File | Open then navigate to the location of 
+     the Source directory...
+
+  7. Select XWB_R90.dpk  It will indicate that you must upgrade the project 
+     before you can open it.
+
+  8. Click on the 'Delphi for Win32' button, then the OK button.
+
+  9. Select the "File | Compile Project" menu. It will compile the package. 
+     There may be some warnings and hints shown, but the package should be 
+     compiled. Unlike the earlier Delphi versions, the default location for 
+     storage of compiled packages is not in the 
+     "Project Files\Delphi6\Projects\Bpl" directory, but under the 
+     "My Documents\Borland Studio Projects\Bpl" directory.
+  
+ 10. Select  File | Close All and then  File | Open  and select XWB_D90.dpk.
+
+ 11. Click on the "Delphi for Win32" button and then OK.
+
+ 12. Select the "File | Compile Project" menu. It will compile the package.
+
+ 13. Select the "Component | Install Packages" menu item.  Navigate to where 
+     the .bpl files that were compiled are located (again, the default is the 
+     "My Documents\Borland Studio Projects\Bpl" directory).
+
+ 14. Select the XWB_D90.bpl and click Open.  The Kernel components are now 
+     installed.
+ 
+ 15. Select Tools | Environment and select Libraries and add the location of 
+     the Source directory to the items in directories to be searched.
+
+ 16. Make a copy of the Samples directory (e.g., "Samples D2005").
+
+ 17. Click on File | Open and migrate to this directory and select 
+     RPCBroker | BrokerEx directories.
+
+ 18. Select the BrokerExample.dpr file.  Once this is loaded and the form is 
+     being viewed, the Kernel components are visible as the last group under
+     the Tool Palette.
+
+ 19. Compile and run the BrokerExample application.
