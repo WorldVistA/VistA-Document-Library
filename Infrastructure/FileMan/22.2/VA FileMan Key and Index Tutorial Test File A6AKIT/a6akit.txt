@@ -1,0 +1,363 @@
+Cache for OpenVMS/ALPHA V7.x^INT^FOR FILEMAN TUTORIAL^~Format=Cache.S~
+%RO on 04 Dec 2006  12:01 PM
+A6AKIT^INT^1^60143,64595^0
+A6AKIT ;SFISC/MKO-SET UP TEST FILE FOR KEY AND INDEX TUTORIAL ;4:06 PM  5 Mar 2001
+ ;;1.0;KEY AND INDEX TUTORIAL;Mar 1, 2001
+ N A6AFL,A6AGL,A6ASFL
+ I $G(DUZ(0))'="@" D  Q
+ . W $C(7),!,"You must be a programmer to run this utility."
+ ;
+ D INIZE^DIEFU,HOME^%ZIS
+ ;
+ ;Get file name and number
+ S A6AFL=$$FL Q:A6AFL<0
+ ;
+ ;If selected an existing file, ask whether to delete it first
+ I '$P(A6AFL,U,3) D  Q:A6AGL=""
+ . S A6AGL=$G(^DIC(+A6AFL,0,"GL")) Q:A6AGL=""
+ . I '$$ASKDEL(A6AFL) S A6AGL="" Q
+ . D REP(A6AFL,A6AGL)
+ ;
+ ;Otherwise, this is a new file
+ E  S A6AGL=$$GL(A6AFL) Q:A6AGL=""
+ ;
+ ;Set DD and data
+ S A6ASFL=+A6AFL_$E(".",+A6AFL'[".")_"02"
+ D DD^A6AKIT1(+A6AFL,A6ASFL)
+ D DATA^A6AKIT2(A6AGL,A6ASFL)
+ ;
+ W !!,"File created: "_$P(A6AFL,U,2)_" (#"_+A6AFL_")"
+ W !," Global root: "_A6AGL
+ W !!,"DONE!!"
+ Q
+ ;
+FL() ;Get file name and number
+ N DA,DLAYGO,DIC,DILN,DTOUT,DUOUT,I,X,Y,Z
+ ;
+ W !,"I am going to set up a test file for the FileMan V. 22.0 Key and Index"
+ W !,"tutorial."
+ W !!,"The tutorial assumes the name of the test file is ZZINDIVIDUAL and the"
+ W !,"number of the test file is 662nnn, but you can choose any name and number"
+ W !,"you wish.",!
+ ;
+ S DLAYGO=1
+ S DIC="^DIC(",DIC(0)="QEAXLI"
+ S DIC("A")="Name of test file: "
+ S DIC("B")="ZZINDIVIDUAL"
+ S DIC("S")="I Y'<2 S DIFILE=+Y,DIAC=""DD"" D ^DIAC I %"
+ S DIC("W")=$P($T(W),";;",2,999)
+ D ^DIC
+ Q Y
+W ;;W:$X>53 !?9 I Y-1.1,Y-.6,$D(^DIC(Y,0,"GL")),^("GL")'["[",$D(@(^("GL")_"0)")) S %=+$P(^(0),U,4) W ?40,"  ("_%_" entr"_$P("ies^y",U,%=1+1)_")"
+ ;
+GL(Y) ;Get global root of file
+ Q:'$P(Y,U,3) $G(^DIC(+Y,0,"GL"))
+ N %,DA,DG,DIC,DIE,DIK,DLAYGO,F,X,Z
+ D DIE^DIB
+ Q $G(DG)
+ ;
+ASKDEL(A6AFL) ;Ask whether to delete file
+ N DIR,DTOUT,DUOUT,DIRUT,DIROUT,X,Y,A6ADEV,A6AMSG,DIERR
+ ;
+ ;Make sure this looks like the test file
+ D
+ . Q:'$D(^DD(+A6AFL,"B","AREA CODE",3.1))
+ . Q:'$D(^DD(+A6AFL,"B","DATE CREATED",4.1))
+ . Q:'$D(^DD(+A6AFL,"B","DOB",.03))
+ . Q:'$D(^DD(+A6AFL,"B","EMAIL",2))
+ . Q:'$D(^DD(+A6AFL,"B","LOCAL NUMBER",3.2))
+ . Q:'$D(^DD(+A6AFL,"B","OLD PHONE NUMBER",3.4))
+ . Q:'$D(^DD(+A6AFL,"B","PHONE NUMBER",3.3))
+ . Q:'$D(^DD(+A6AFL,"B","SSN",.02))
+ . S Y=1
+ I '$G(Y) D  Q 0
+ . W !!,$C(7)_"  The file you have selected doesn't look like the Key and Index Tutorial"
+ . W !,"  test file. The A6AKIT utility cannot be used to delete it. Please use"
+ . W !,"  FileMan's Edit File option on the Utility Functions menu to delete it,"
+ . W !,"  or select a different file.",!
+ ;
+ ;Ask whether to delete the old file.
+ S A6ADEV=$$GET1^DID(+A6AFL,"","","DEVELOPER","","A6AMSG")
+ S:A6ADEV?." " A6ADEV="<unknown>"
+ W !!,"  NOTE: You've selected an existing Key and Index Tutorial test file."
+ W !!,"                File: "_$P(A6AFL,U,2)_" (#"_+A6AFL_")"
+ W !,"          Created by: "_A6ADEV
+ W !!,"        You can choose to delete it and replace it with the original version"
+ W !,"        of the file."
+ S DIR(0)="Y"
+ S DIR("A")="Delete and replace "_$P(A6AFL,U,2)_" File (#"_+A6AFL_")"
+ S DIR("B")="NO"
+ S DIR("?",1)="  Answer 'YES' if you would like to delete the file, and replace it with"
+ S DIR("?",2)="  the original version of the test file."
+ S DIR("?",3)=""
+ S DIR("?")="  Answer 'NO' to quit."
+ W ! D ^DIR
+ Q Y
+ ;
+REP(A6AFL,A6AGL) ;Replace file
+ ;Delete
+ N %,DA,DIC,DLAYGO,DIU,X,Y,Z
+ S DIU=+A6AFL,DIU(0)="DT"
+ D EN^DIU2
+ ;
+ ;Create
+ S DLAYGO=1
+ S DIC="^DIC(",DIC(0)="QLXI"
+ S X=$P(A6AFL,U,2),DINUM=+A6AFL
+ D FILE^DICN
+ ;
+ S $P(^DIC(+A6AFL,0),U,2)=+A6AFL,^("%A")=DUZ_U_DT,^(0,"GL")=A6AGL
+ F %="DD","DEL","RD","WR","LAYGO","AUDIT" S ^DIC(+A6AFL,0,%)="@"
+ S ^DD(+A6AFL,0)="FIELD^^0^0"
+ S @(A6AGL_"0)")=$P(A6AFL,U,2)_U_+A6AFL
+ Q
+ ;
+MODENT(A6AFILE) ;Establishes a starting point for
+ ;OLD PHONE NUMBER and PHONE NUMBER
+ N A6AFDA,A6AIENS
+ ;
+ ;Lookup MODIFIED ENTRY
+ S A6AIENS=$$FIND1^DIC(A6AFILE,"","QX","MODIFIED,ENTRY","B")_","
+ I $G(A6AIENS)'>0 D  Q
+ . I $G(DIERR) D MSG^DIALOG() Q
+ . I $P(A6AIENS,",")=0 W !,"MODIFIED,ENTRY not found."
+ ;
+ S A6AFDA(A6AFILE,A6AIENS,3.1)=111
+ S A6AFDA(A6AFILE,A6AIENS,3.2)="111-1111"
+ D FILE^DIE("","A6AFDA") I $G(DIERR) D MSG^DIALOG() Q
+ ;
+ S A6AFDA(A6AFILE,A6AIENS,3.1)=415
+ S A6AFDA(A6AFILE,A6AIENS,3.2)="555-1234"
+ D FILE^DIE("","A6AFDA") I $G(DIERR) D MSG^DIALOG() Q
+ ;
+ D INQ(A6AFILE,+A6AIENS)
+ Q
+ ;
+INQ(A6AFILE,A6AIEN) ;Inquire
+ N A,D0,DK,S,Y,DIC,DA,DR,DIQ
+ S DIC=$S($G(A6AFILE):$G(^DIC(A6AFILE,0,"GL")),1:$G(A6AFILE))
+ Q:$G(DIC)=""
+ S DA=+A6AIEN,DIQ(0)="R"
+ D EN^DIQ
+ Q
+
+A6AKIT1^INT^1^60143,64595^0
+A6AKIT1 ;SFISC/MKO-DD FOR ZZINDIVIDUAL FILE ;11:10 AM  1 Mar 2001
+ ;;1.0;KEY AND INDEX TUTORIAL;Mar 1, 2001
+DD(A6AFIL,A6ASFL) ;Build DD
+ N I,X,Y,Z
+ ;
+ F I=1:2 S X=$T(Q+I) Q:X=""  D
+ . S Y=$E($T(Q+I+1),4,999),X=$E(X,4,999)
+ . S:$A(Y)=126 I=I+1,Y=$E(Y,2,999)_$E($T(Q+I+1),5,99)
+ . S:$A(Y)=61 Y=$E(Y,2,999)
+ . F  Q:Y'["A6ASFL"  S Y=$P(Y,"A6ASFL")_A6ASFL_$P(Y,"A6ASFL",2,999)
+ . F  Q:Y'["A6AFIL"  S Y=$P(Y,"A6AFIL")_A6AFIL_$P(Y,"A6AFIL",2,999)
+ . S @X=Y
+ N DA,DIC,DIK
+ S DIK="^DD("_A6AFIL_",",DA(1)=A6AFIL D IXALL^DIK K DIK,DA
+ S DIK="^DD("_A6ASFL_",",DA(1)=A6ASFL D IXALL^DIK K DIK,DA
+Q Q
+ ;;^DD(A6AFIL,.01,0)
+ ;;=NAME^RF^^0;1^K:$L(X)>30!($L(X)<3)!'(X'?1P.E) X
+ ;;^DD(A6AFIL,.01,1,0)
+ ;;=^.1
+ ;;^DD(A6AFIL,.01,1,1,0)
+ ;;=A6AFIL^B
+ ;;^DD(A6AFIL,.01,1,1,1)
+ ;;=S ^DIZ(A6AFIL,"B",$E(X,1,30),DA)=""
+ ;;^DD(A6AFIL,.01,1,1,2)
+ ;;=K ^DIZ(A6AFIL,"B",$E(X,1,30),DA)
+ ;;^DD(A6AFIL,.01,3)
+ ;;=Answer must be 3-30 characters in length.
+ ;;^DD(A6AFIL,.02,0)
+ ;;=SSN^F^^0;2^K:$L(X)>9!($L(X)<9)!'(X?9N) X
+ ;;^DD(A6AFIL,.02,3)
+ ;;=Answer must be 9 characters in length.
+ ;;^DD(A6AFIL,.03,0)
+ ;;=DOB^D^^0;3^S %DT="EX" D ^%DT S X=Y K:Y<1 X
+ ;;^DD(A6AFIL,2,0)
+ ;;=EMAIL^A6ASFL^^2;0
+ ;;^DD(A6AFIL,3.1,0)
+ ;;=AREA CODE^NJ3,0^^3;1^K:+X'=X!(X>999)!(X<100)!(X?.E1"."1N.N) X
+ ;;^DD(A6AFIL,3.1,3)
+ ;;=Type a Number between 100 and 999, 0 Decimal Digits
+ ;;^DD(A6AFIL,3.2,0)
+ ;;=LOCAL NUMBER^F^^3;2^K:$L(X)>8!($L(X)<8)!'(X?3N1"-"4N) X
+ ;;^DD(A6AFIL,3.2,3)
+ ;;=Answer must be 8 characters in length.
+ ;;^DD(A6AFIL,3.3,0)
+ ;;=PHONE NUMBER^F^^3;3^K:$L(X)>15!($L(X)<1) X
+ ;;^DD(A6AFIL,3.3,3)
+ ;;=Answer must be 1-15 characters in length.
+ ;;^DD(A6AFIL,3.4,0)
+ ;;=OLD PHONE NUMBER^F^^3;4^K:$L(X)>15!($L(X)<1) X
+ ;;^DD(A6AFIL,3.4,3)
+ ;;=Answer must be 1-15 characters in length.
+ ;;^DD(A6AFIL,4.1,0)
+ ;;=DATE CREATED^D^^4;1^S %DT="ESTXR" D ^%DT S X=Y K:Y<1 X
+ ;;^DD(A6ASFL,0)
+ ;;=EMAIL SUB-FIELD^^1^2
+ ;;^DD(A6ASFL,0,"NM","EMAIL")
+ ;;=
+ ;;^DD(A6ASFL,0,"UP")
+ ;;=A6AFIL
+ ;;^DD(A6ASFL,.01,0)
+ ;;=EMAIL NAME^MF^^0;1^K:$L(X)>20!($L(X)<1) X
+ ;;^DD(A6ASFL,.01,1,0)
+ ;;=^.1
+ ;;^DD(A6ASFL,.01,1,1,0)
+ ;;=A6ASFL^B
+ ;;^DD(A6ASFL,.01,1,1,1)
+ ;;=S ^DIZ(A6AFIL,DA(1),2,"B",$E(X,1,30),DA)=""
+ ;;^DD(A6ASFL,.01,1,1,2)
+ ;;=K ^DIZ(A6AFIL,DA(1),2,"B",$E(X,1,30),DA)
+ ;;^DD(A6ASFL,.01,3)
+ ;;=Answer must be 1-20 characters in length.
+ ;;^DD(A6ASFL,1,0)
+ ;;=EMAIL DOMAIN^F^^0;2^K:$L(X)>20!($L(X)<1) X
+ ;;^DD(A6ASFL,1,3)
+ ;;=Answer must be 1-20 characters in length.
+
+A6AKIT2^INT^1^60186,40400^
+A6AKIT2 ;SFISC/MKO-DATA FOR ZZINDIVIDUAL FILE ;11:13 AM  13 Oct 2005
+ ;;1.0;KEY AND INDEX TUTORIAL;Mar 1, 2001
+DATA(A6AGL,A6ASFL) ;Set data
+ N A6AGBL,X,Y,Z
+ S A6AGBL=$$CREF^DILF(A6AGL)
+ F I=1:2 S X=$T(ENTRY+I) Q:X=""  D
+ . S Y=$E($T(ENTRY+I+1),5,999),X=$E(X,4,999)
+ . F  Q:Y'["A6ASFL"  S Y=$P(Y,"A6ASFL")_A6ASFL_$P(Y,"A6ASFL",2,999)
+ . S @X=Y
+ N DA,DIC,DIK S DIK=A6AGL D IXALL^DIK
+ Q
+ENTRY ;
+ ;;@A6AGBL@(1,0)
+ ;;=FMPATIENT,ONE^000221111^2450520
+ ;;@A6AGBL@(1,2,0)
+ ;;=^A6ASFL^2^2
+ ;;@A6AGBL@(1,2,1,0)
+ ;;=rc^aaa.bbb.com
+ ;;@A6AGBL@(1,2,2,0)
+ ;;=rose^xxx.yyy.com
+ ;;@A6AGBL@(1,3)
+ ;;=206^555-4112
+ ;;@A6AGBL@(2,0)
+ ;;=FMPATIENT,TWO^666443333^2320205
+ ;;@A6AGBL@(2,2,0)
+ ;;=^A6ASFL^2^2
+ ;;@A6AGBL@(2,2,1,0)
+ ;;=jasmine.geiser^aaa.bbb.com
+ ;;@A6AGBL@(2,2,2,0)
+ ;;=jasmine^xxx.yyy.com
+ ;;@A6AGBL@(2,3)
+ ;;=206^555-8257
+ ;;@A6AGBL@(3,0)
+ ;;=FMPATIENT,THREE^666776666^2590714
+ ;;@A6AGBL@(3,2,0)
+ ;;=^A6ASFL^2^2
+ ;;@A6AGBL@(3,2,1,0)
+ ;;=herb^abc.def.com
+ ;;@A6AGBL@(3,2,2,0)
+ ;;=hwaters^abc.def.com
+ ;;@A6AGBL@(3,3)
+ ;;=406^555-5834
+ ;;@A6AGBL@(4,0)
+ ;;=FMPATIENT,FOUR^666223333^2691123
+ ;;@A6AGBL@(4,2,0)
+ ;;=^A6ASFL^2^2
+ ;;@A6AGBL@(4,2,1,0)
+ ;;=mlake^xxx.yyy.com
+ ;;@A6AGBL@(4,2,2,0)
+ ;;=marigold^aaa.bbb.com
+ ;;@A6AGBL@(4,3)
+ ;;=503^555-3612
+ ;;@A6AGBL@(5,0)
+ ;;=FMPATIENT,FIVE^666654321^2710227
+ ;;@A6AGBL@(5,2,0)
+ ;;=^A6ASFL^2^2
+ ;;@A6AGBL@(5,2,1,0)
+ ;;=dill^abc.def.com
+ ;;@A6AGBL@(5,2,2,0)
+ ;;=dtide^xxx.yyy.com
+ ;;@A6AGBL@(5,3)
+ ;;=505^555-5939
+ ;;@A6AGBL@(6,0)
+ ;;=FMPATIENT,SIX^666889999^2550602
+ ;;@A6AGBL@(6,2,0)
+ ;;=^A6ASFL^1^1
+ ;;@A6AGBL@(6,2,1,0)
+ ;;=sagebrooks^aaa.bbb.com
+ ;;@A6AGBL@(6,3)
+ ;;=307^555-4680
+ ;;@A6AGBL@(7,0)
+ ;;=FMPATIENT,SEVEN^666678901^2480811
+ ;;@A6AGBL@(7,2,0)
+ ;;=^A6ASFL^2^2
+ ;;@A6AGBL@(7,2,1,0)
+ ;;=hazel.frost^abc.def.com
+ ;;@A6AGBL@(7,2,2,0)
+ ;;=hazel^abc.def.com
+ ;;@A6AGBL@(7,3)
+ ;;=503^555-6874
+ ;;@A6AGBL@(8,0)
+ ;;=FMPATIENT,EIGHT^666891234^2730926
+ ;;@A6AGBL@(8,2,0)
+ ;;=^A6ASFL^2^2
+ ;;@A6AGBL@(8,2,1,0)
+ ;;=saffron^aaa.bbb.com
+ ;;@A6AGBL@(8,2,2,0)
+ ;;=sripple^abc.def.com
+ ;;@A6AGBL@(8,3)
+ ;;=503^555-7555^^
+ ;;@A6AGBL@(9,0)
+ ;;=FMPATIENT,NINE^666345678^2191031
+ ;;@A6AGBL@(9,2,0)
+ ;;=^A6ASFL^1^1
+ ;;@A6AGBL@(9,2,1,0)
+ ;;=ginger^aaa.bbb.com
+ ;;@A6AGBL@(9,3)
+ ;;=208^555-8097
+ ;;@A6AGBL@(10,0)
+ ;;=FMPATIENT,TEN^666432123^2380409
+ ;;@A6AGBL@(10,2,0)
+ ;;=^A6ASFL^2^2
+ ;;@A6AGBL@(10,2,1,0)
+ ;;=periwinkle^abc.def.com
+ ;;@A6AGBL@(10,2,2,0)
+ ;;=pwells^xxx.yyy.com
+ ;;@A6AGBL@(10,3)
+ ;;=415^555-5938
+ ;;@A6AGBL@(11,0)
+ ;;=FMPATIENT,ELEVEN^666765432^2700321
+ ;;@A6AGBL@(11,2,0)
+ ;;=^A6ASFL^2^2
+ ;;@A6AGBL@(11,2,1,0)
+ ;;=chervil^xxx.yyy.com
+ ;;@A6AGBL@(11,2,2,0)
+ ;;=cpuddles^abc.def.com
+ ;;@A6AGBL@(11,3)
+ ;;=907^555-7584
+ ;;@A6AGBL@(12,0)
+ ;;=FMPATIENT,TWELVE^666996666^2470522
+ ;;@A6AGBL@(12,2,0)
+ ;;=^A6ASFL^2^2
+ ;;@A6AGBL@(12,2,1,0)
+ ;;=basil^abc.def.com
+ ;;@A6AGBL@(12,2,2,0)
+ ;;=bsnow^xxx.yyy.com
+ ;;@A6AGBL@(12,3)
+ ;;=503^555-9573
+ ;;@A6AGBL@(13,0)
+ ;;=FMPATIENT,THIRTEEN^666567890^2450520
+ ;;@A6AGBL@(13,2,0)
+ ;;=^A6ASFL^2^2
+ ;;@A6AGBL@(13,2,1,0)
+ ;;=holly^abc.def.com
+ ;;@A6AGBL@(13,2,2,0)
+ ;;=hollyrivers^xxx.yyy.com
+ ;;@A6AGBL@(13,3)
+ ;;=509^555-7969
+
+
+
