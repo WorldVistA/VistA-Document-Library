@@ -1,0 +1,4 @@
+*.txt           text
+*.doc          -text
+*.pdf          -text
+*.zip          -text
